@@ -30,7 +30,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route:: get('/dash',[HomeController::class,'dash']);
+Route:: get('/dash',[HomeController::class,'dash'])->middleware('auth','verified');
 
 Route::get('/view_category', [AdminController::class, 'view_category']);
 Route::post('/add_category', [AdminController::class, 'add_category']);
@@ -49,4 +49,7 @@ Route::get('/cash_order', [HomeController::class, 'cash_order']);
 Route::get('/stripe/{totalprice}', [HomeController::class, 'stripe']);
 Route::post('stripe/{totalprice}', [HomeController::class,'stripePost'])->name('stripe.post');//there is route in form action not not url so name is required 
 Route::get('/order', [AdminController::class, 'order']);
+Route::get('/delivered/{id}', [AdminController::class, 'delivered']);
+Route::get('/print_pdf/{id}', [AdminController::class, 'print_pdf']);
+Route::get('/send_email/{id}', [AdminController::class, 'send_email']);
 

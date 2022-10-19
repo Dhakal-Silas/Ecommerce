@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
+use PDF;
 class AdminController extends Controller
 {
   public function view_category()
@@ -99,5 +100,27 @@ class AdminController extends Controller
   {
     $order=Order::all();
     return view('admin.order',compact('order'));
+  }
+  public function delivered($id)
+  {
+    $order= Order::find($id);
+    $order->delivery_status="Delivered";
+    $order->payment_status="paid";
+    $order->save();
+    return redirect()->back();
+    
+  }
+  public function print_pdf($id)
+  {
+    $order=Order::find($id);
+
+    $pdf=PDF::loadView('admin.pdf',compact('order'));
+    return $pdf->download('oreder_details.pdf');
+  }
+
+  public function send_email($id)
+  {
+    $order=Order::find($id);
+    return view('admin.email_info');
   }
 }

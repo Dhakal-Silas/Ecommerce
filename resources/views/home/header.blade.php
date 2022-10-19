@@ -52,7 +52,7 @@
                         </li>
 
                         <li class="nav-item">
-                           <a class="btn btn-success" href="{{ route('register') }}">Regester</a>
+                           <a class="btn btn-success" href="{{ route('register') }}">Register</a>
                         </li>
                         @endauth
                        @endif
