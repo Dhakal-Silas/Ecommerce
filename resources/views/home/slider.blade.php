@@ -1,5 +1,5 @@
   <!-- slider section -->
-  <section class="slider_section " style="    padding-bottom: 150px;">
+  <section class="slider_section " >
   </style>>
             <div class="slider_bg_box">
                <img src="images/slider-bg.jpg" alt="">

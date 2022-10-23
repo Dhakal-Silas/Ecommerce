@@ -9,19 +9,21 @@
         font-size:25px;
         font-weight:bold;
         padding-bottom:40px;
+        overflow
     }
     .table_design{
         border:2px solid white;
         margin:auto;
         width:100%;
         text-align:center;
+        
     }
     .th_design{
         background:skyblue;
     }
     .image_size{
-        width:250px;
-        height:200px;
+        width:100px;
+        height:100px;
     }
 </style>  
 </head>
@@ -32,9 +34,16 @@
       <!-- partial -->
      @include('admin.header')
      <div class="main-panel">
-        <div class="content-wrapper" style="width:85%; margin-left:244px; margin-top:-734px; ">
+        <div class="content-wrapper" style="width:85%; margin-left:244px; margin-top:-662px; ">
             <h1 class="center">All Orders</h1>
-            <table class="table_design">
+            <div style="padding-left:35%; padding-bottom:30px;">
+                <form action="{{url('search')}}" method="get" style="position:relative;">
+                @csrf
+                    <input type="text" name="search" placeholder="Search Here" style="color:black">
+                    <input type="submit" value="Search" class="btn btn-outline-primary" >
+                </form>
+            </div>
+            <table class="table_design" >
                 <tr class="th_design">
                     <th style="padding:10px;">Name</th>
                     <th style="padding:10px;">Email</th>
@@ -50,7 +59,7 @@
                     <th style="padding:10px;"> Print PDF</th>
                     <th style="padding:10px;"> Send Email</th>
                 </tr>
-             @foreach($order as $order)
+             @forelse($order as $order)
                 <tr>
                     <td>{{$order->name}}</td>
                     <td>{{$order->email}}</td>
@@ -73,7 +82,11 @@
                     <td><a href="{{url('print_pdf',$order->id)}}" class="btn btn-secondary" style="position:relative;">Print PDF</a></td>
                     <td> <a href="{{url('send_email',$order->id)}}" class="btn btn-info" style="position:relative;">Send Email</a></td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="16">No Data Found</td>
+                </tr>
+                @endforelse
             </table>
         </div>
      </div>

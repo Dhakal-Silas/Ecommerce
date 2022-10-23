@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Comment;
+use App\Models\Reply;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Stripe;
@@ -19,19 +21,38 @@ class HomeController extends Controller
 
         if ($usertype=='1')
         {
-            return view('admin.home');
+            $total_product=Product::all()->count();
+            $total_order=Order::all()->count();
+            $total_user=User::all()->count();
+            $order=Order::all();
+            
+            $total_revenue=0;
+            foreach($order as $order)
+            {
+                $total_revenue=$total_revenue + $order->price;
+            }
+            $total_delivered=Order::where('delivery_status','=','delivered')->get()->count();
+            $total_processing=Order::where('delivery_status','=','processing')->get()->count();
+            return view('admin.home',compact('total_product','total_order','total_user','total_revenue','total_delivered','total_processing'));
         }
         else {
+            $comment=Comment::orderby('id','desc')->get();
+            $reply=Reply::all();
+          
 
              $product=Product::paginate(6);
-        return view('home.userpage',compact('product'));
+        return view('home.userpage',compact('product','comment','reply'));
         }
     }
 
     public function index()
     {
+        $comment=Comment::orderby('id','desc')->get();
+        $reply=Reply::all();
+   
+
         $product=Product::paginate(6);
-        return view('home.userpage',compact('product'));
+        return view('home.userpage',compact('product','comment','reply'));
     }
 
     public function product_details($id)
@@ -171,6 +192,111 @@ class HomeController extends Controller
         Session::flash('success', 'Payment successful!');
               
         return back();
+    }
+    public function show_order()
+    {
+        if(Auth::id())
+        {
+            $user=Auth::user();
+            $userid=$user->id;
+            $order=Order::where('user_id','=',$userid)->get();
+            return view('home.order',compact('order'));
+        }
+        else
+        {
+            return redirect('login');
+        }
+        
+    }
+    public function cancel_order($id)
+    {
+        $order=Order::find($id);
+        $order->delivery_status='Canceled';
+        $order->save();
+        return redirect()->back();
+    }
+    public function add_comment(Request $request)
+    {
+       if (Auth::id())
+       {
+        $comment= new Comment;
+        $comment->comment=$request->comment;
+        $comment->name=Auth::user()->name;
+        $comment->user_id=Auth::user()->id;
+        $comment->save();
+        return redirect()->back();
+        
+       }
+       else{
+        return redirect('login');
+       }
+       
+    }
+    public function add_reply(Request $request)
+    {
+        if(Auth::id())
+        {
+                $reply=new Reply;
+                $reply->name=Auth::user()->name;
+                $reply->user_id=Auth::user()->id;
+                $reply->reply=$request->reply;
+                $reply->comment_id=$request->commentId;
+                $reply->save();
+                return redirect()->back();
+                
+        }
+        else
+        {
+            return redirect('login');
+        }
+    }
+
+    public function delete_comment($id)
+    {
+        if (Auth::id())
+        {
+            $user=Auth::user()->id;
+            
+            $comment=Comment::find($id);
+            if($user==$comment->user_id)
+            {
+            $comment->delete();
+            return redirect()->back();
+            }
+            else{
+                return redirect('');
+            }
+            
+
+        }
+        else
+        {
+            return redirect('login');
+        }
+    }
+
+    public function delete_reply($id)
+    {
+        if (Auth::id())
+        {
+            $user=Auth::user()->id;
+            
+            $reply=Reply::find($id);
+            if($user==$reply->user_id)
+            {
+            $reply->delete();
+            return redirect()->back();
+            }
+            else{
+                return redirect('');
+            }
+            
+
+        }
+        else
+        {
+            return redirect('login');
+        }
     }
 }
 

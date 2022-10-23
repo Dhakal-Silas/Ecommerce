@@ -34,7 +34,7 @@
      @include('admin.header')
         <!-- partial -->
         <div class="main-panel">
-          <div class="content-wrapper" style="width:85%; margin-left:244px; margin-top:-734px; ">
+          <div class="content-wrapper" style="width:85%; margin-left:244px; margin-top:-662px; ">
           @if (session()->has('message'))
 
           <div class="alert alert-success">

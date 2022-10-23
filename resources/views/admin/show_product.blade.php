@@ -5,7 +5,7 @@
   <style>
     .center{
         margin:auto;
-        width:50%;
+        width:90%;
         border:2px solid white;
         text-align:center;
         margin-top:40px;
@@ -36,7 +36,7 @@
      @include('admin.header')
         <!-- partial -->
         <div class="main-panel">
-            <div class="content-wrapper" style="width:85%; margin-left:244px; margin-top:-734px; ">
+            <div class="content-wrapper" style="width:85%; margin-left:244px; margin-top:-662px; ">
             @if (session()->has('message'))
 
 <div class="alert alert-success">
@@ -46,7 +46,7 @@
 
 @endif
             <h2 class="font_size">All Products</h2>
-            <table class="center" style="position:relative;">
+            <table class="center" style="position:relative;" >
                 <tr class="th_color">
                     <th class="th_design">Product Title</th>
                     <th class="th_design">Description</th>
